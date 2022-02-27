@@ -1,139 +1,96 @@
-main( );
+"use strict";
 
-function NormalisedToDevice( coord, axisSize )
-{
-	var halfAxisSize = axisSize / 2;
+var canvas;
+var gl;
 
-	var deviceCoord = ( coord + 1 ) * halfAxisSize;
+var maxNumVertices  = 200;
+var index = 0;
 
-	return deviceCoord;
+var cindex = 0;
+
+var colors = [
+
+    vec4( 0.0, 0.0, 0.0, 1.0 ),  // black
+    vec4( 1.0, 0.0, 0.0, 1.0 ),  // red
+    vec4( 1.0, 1.0, 0.0, 1.0 ),  // yellow
+    vec4( 0.0, 1.0, 0.0, 1.0 ),  // green
+    vec4( 0.0, 0.0, 1.0, 1.0 ),  // blue
+    vec4( 1.0, 0.0, 1.0, 1.0 ),  // magenta
+    vec4( 0.0, 1.0, 1.0, 1.0)   // cyan
+];
+var t;
+var numPolygons = 0;
+var numIndices = [];
+numIndices[0] = 0;
+var start = [0];
+
+window.onload = function init() {
+    canvas = document.getElementById( "glcanvas" );
+
+    gl = WebGLUtils.setupWebGL( canvas );
+    if ( !gl ) { alert( "Unable to setup WebGL. Your browser or computer may not support it." ); }
+
+    var m = document.getElementById("colorMenu");
+
+    m.addEventListener("click", function() {
+       cindex = m.selectedIndex;
+        });
+
+    var a = document.getElementById("createPolygon")
+    a.addEventListener("click", function(){
+    numPolygons++;
+    numIndices[numPolygons] = 0;
+    start[numPolygons] = index;
+    render();
+    });
+
+    canvas.addEventListener("mousedown", function(event){
+        t  = vec2(2*event.clientX/canvas.width-1,
+           2*(canvas.height-event.clientY)/canvas.height-1);
+        gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
+        gl.bufferSubData(gl.ARRAY_BUFFER, 8*index, flatten(t));
+
+        t = vec4(colors[cindex]);
+
+        gl.bindBuffer( gl.ARRAY_BUFFER, cBufferId );
+        gl.bufferSubData(gl.ARRAY_BUFFER, 16*index, flatten(t));
+
+        numIndices[numPolygons]++;
+        index++;
+    } );
+
+
+    gl.viewport( 0, 0, canvas.width, canvas.height );
+    gl.clearColor( 0.8, 0.8, 0.8, 1.0 );
+    gl.clear( gl.COLOR_BUFFER_BIT );
+
+
+    //
+    //  Load shaders and initialize attribute buffers
+    //
+    var program = initShaders( gl, "vertex-shader", "fragment-shader" );
+    gl.useProgram( program );
+
+    var bufferId = gl.createBuffer();
+    gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
+    gl.bufferData( gl.ARRAY_BUFFER, 8*maxNumVertices, gl.STATIC_DRAW );
+    var vPos = gl.getAttribLocation( program, "vPosition" );
+    gl.vertexAttribPointer( vPos, 2, gl.FLOAT, false, 0, 0 );
+    gl.enableVertexAttribArray( vPos );
+
+    var cBufferId = gl.createBuffer();
+    gl.bindBuffer( gl.ARRAY_BUFFER, cBufferId );
+    gl.bufferData( gl.ARRAY_BUFFER, 16*maxNumVertices, gl.STATIC_DRAW );
+    var vColor = gl.getAttribLocation( program, "vColor" );
+    gl.vertexAttribPointer( vColor, 4, gl.FLOAT, false, 0, 0 );
+    gl.enableVertexAttribArray( vColor );
 }
 
-function DeviceToNormalised( coord, axisSize )
-{
-	var halfAxisSize = axisSize / 2;
+function render() {
 
-	var normalisedCoord = ( coord / halfAxisSize ) - 1;
+    gl.clear( gl.COLOR_BUFFER_BIT );
 
-	return normalisedCoord;
-}
-
-function main( )
-{
-	const canvas = document.querySelector( "#glcanvas" );
-
-	const gl = canvas.getContext( "webgl" );
-
-	if ( !gl )
-	{
-		alert( "Unable to setup WebGL. Your browser or computer may not support it." );
-
-		return;
-	}
-
-	var lineVertices = [
-    	-0.5, -0.2, 0.0,
-    	-0.1, 0.7, 0.0,
-    	-0.3, -0.3, 0.0,
-    	0.2, 0.6, 0.0,
-    	0.7, -0.9, 0.0,
-    	0.7, 0.9, 0.0 
-    ];
-
-        // var squareVertices = [
-        //     -0.5, 0.5, 0.0, // 1st - 0
-        //     -0.5, -0.5, 0.0, // 2nd - 1
-        //     0.5, -0.5, 0.0, // 3rd - 2
-        //     0.5, 0.5, 0.0 // 4th - 3
-        // ];
-
-    
-
-	var vertex_buffer = gl.createBuffer( );
-
-        gl.bindBuffer( gl.ARRAY_BUFFER, vertex_buffer );
-
-        gl.bufferData( gl.ARRAY_BUFFER, new Float32Array( lineVertices ), gl.STATIC_DRAW );
-
-            // ===== SQUARE =====
-            // gl.bufferData( gl.ARRAY_BUFFER, new Float32Array( squareVertices ), gl.STATIC_DRAW );
-
-        gl.bindBuffer( gl.ARRAY_BUFFER, null );
-
-            // // ===== SQUARE =====
-            // var indices = [3, 2, 1, 3, 1, 0];
-            // // Create an empty buffer object to store Index buffer
-            // var Index_Buffer = gl.createBuffer( );
-
-            // // Bind appropriate array buffer to it
-            // gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, Index_Buffer );
-
-            // // Pass the vertex data to the buffer
-            // gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, new Uint16Array (indices ), gl.STATIC_DRAW );
-            
-            // // Unbind the buffer
-            // gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, null );
-    
-
-	var vertCode = 
-		'attribute vec3 coordinates;' +
-		'void main(void)' +
-		'{' +
-			' gl_Position = vec4(coordinates, 1.0);' +
-		'}';
-
-	var vertShader = gl.createShader( gl.VERTEX_SHADER );
-
-	gl.shaderSource( vertShader, vertCode );
-
-	gl.compileShader( vertShader );
-
-	var fragCode = 
-		'void main(void)' +
-		'{' +
-			' gl_FragColor = vec4(0.0, 0.0, 0.0, 0.1);' +
-		'}';
-
-	var fragShader = gl.createShader( gl.FRAGMENT_SHADER );
-
-	gl.shaderSource( fragShader, fragCode );
-
-	gl.compileShader( fragShader );
-
-	var shaderProgram = gl.createProgram( );
-
-	gl.attachShader( shaderProgram, vertShader );
-
-	gl.attachShader( shaderProgram, fragShader );
-
-	gl.linkProgram( shaderProgram );
-
-	gl.useProgram( shaderProgram );
-
-	gl.bindBuffer( gl.ARRAY_BUFFER, vertex_buffer );
-
-        // ===== SQUARE =====
-        // Bind index buffer object
-        // gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, Index_Buffer );
-
-	var coord = gl.getAttribLocation( shaderProgram, "coordinates" );
-
-	gl.vertexAttribPointer( coord, 3, gl.FLOAT, false, 0, 0 );
-
-	gl.enableVertexAttribArray( coord );
-
-	gl.clearColor( 1.0, 0.0, 0.0, 1.0 );
-
-	gl.enable( gl.DEPTH_TEST );
-
-	gl.clear( gl.COLOR_BUFFER_BIT );
-
-	gl.viewport( 0, 0, canvas.width, canvas.height );
-
-	gl.drawArrays( gl.LINES, 0, 6 );
-    // gl.drawArrays( gl.LINE_LOOP, 0, 6 );
-    // gl.drawArrays( gl.LINE_STRIP, 0, 4 );
-
-        // ===== SQUARE =====
-        // gl.drawElements( gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0 );
+    for(var i=0; i<numPolygons; i++) {
+        gl.drawArrays( gl.TRIANGLE_FAN, start[i], numIndices[i] );
+    }
 }
