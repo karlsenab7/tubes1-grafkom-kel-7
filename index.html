@@ -2,51 +2,21 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<title>WebGL</title>
+		<title>WebGL Home</title>
 		<link rel="stylesheet" href="index.css" type="text/css" />
-		<script id="vertex-shader" type="x-shader/x-vertex">
-			attribute vec4 vPosition;
-			attribute vec4 vColor;		
-			varying vec4 fColor;
-			void main()
-			{
-				gl_Position = vPosition;
-				fColor = vColor;
-			}
-			</script>
-			<script id="fragment-shader" type="x-shader/x-fragment">
-			precision mediump float;
-			varying vec4 fColor;
-			void main()
-			{
-				gl_FragColor = fColor;
-			}
-			</script>
-			
-			<script src="https://www.cs.unm.edu/~angel/COURSERA/CODE/Common/webgl-utils.js"></script>
-			<script src="https://www.cs.unm.edu/~angel/COURSERA/CODE/Common/initShaders.js"></script>
-			<script src="https://www.cs.unm.edu/~angel/COURSERA/CODE/Common/MV.js"></script>
-			<script type="text/javascript" src="index.js"></script>
+
 	</head>
 
 	<body>
-		<canvas id="glcanvas" width="640" height="480"></canvas>
-
 		<div>
-			<select name="colorMenu" id="colorMenu" size="7">
-				<option value="0">Black</option>
-				<option value="1">Red</option>
-				<option value="2">Yellow</option>
-				<option value="3">Green</option>
-				<option value="4">Blue</option>
-				<option value="5">Magenta</option>
-				<option value="6">Cyan</option>
-			</select>
-			<button id="createPolygon">Create Polygon</button>
+			<a href="line.html">Line</a>
+			<a href="square.html">Square</a>
+			<a href="polygon.html">Polygon</a>
+		</div>
+		<div>
+			<h1>How To Use This Website</h1>
+
 		</div>
 	</body>
 
-
-
-	<script src="index.js"></script>
 </html>
