@@ -26,22 +26,20 @@
 			<script src="https://www.cs.unm.edu/~angel/COURSERA/CODE/Common/webgl-utils.js"></script>
 			<script src="https://www.cs.unm.edu/~angel/COURSERA/CODE/Common/initShaders.js"></script>
 			<script src="https://www.cs.unm.edu/~angel/COURSERA/CODE/Common/MV.js"></script>
+			<script type="text/javascript" src="index.js"></script>
 	</head>
 
 	<body>
 		<canvas id="glcanvas" width="500" height="500"></canvas>
 		<div>
-			<button id="createSquare">Create Square</button>
-			<!-- <form onchange="renderSquare(scale.value)">
-				<label>Scale</label> -->
-				<input id="scale" name="scale" type="text">
-			<!-- </form> -->
-			<button onclick="toTrue()">Change Position</button>
-			<button onclick="toFalse()">Stop Change Position</button>
+			<button id="createSquare">Create Rectangle</button>
+				<input id="scale" name="scale" required type="text">
+                <button onclick="toTrue()">Change Position</button>
+                <button onclick="toFalse()">Stop Change Position</button>
 		</div>
 	</body>
 
 
 
-	<script src="square.js"></script>
+	<script src="rectangle.js"></script>
 </html>

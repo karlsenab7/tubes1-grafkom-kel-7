@@ -12,7 +12,7 @@ window.onload = function init() {
 
     var square = document.getElementById("createSquare")
     square.addEventListener("click", function(){
-    renderSquare(0.4);
+    renderRectangle();
     });
 
 
@@ -22,10 +22,10 @@ window.onload = function init() {
 		var newPointPosition = getMousePosition(canvasElem, e);
 		console.log(newPointPosition);
 		var vertices = [
-			-0.5, 0.5, 0.0, // 1st - 0
-			-0.5, -0.5, 0.0, // 2nd - 1
-			0.5, -0.5, 0.0, // 3rd - 2
-			0.5, 0.5, 0.0 // 4th - 3
+			-0.3, 0.6, 0.0, // 1st - 0
+			-0.3, -0.3, 0.0, // 2nd - 1
+			0.3, -0.3, 0.0, // 3rd - 2
+			0.3, 0.6, 0.0 // 4th - 3
 		 ];
 		var indices = [3, 2, 1, 3, 1, 0];
 		if(document.getElementById("scale").value.length > 0){
@@ -36,7 +36,8 @@ window.onload = function init() {
 
 		if(Position){
 			//Jarak dengan titik default 1
-		var jarak = vertices[1];
+		var tegak = Math.sqrt((Math.pow(vertices[0]-vertices[3],2)+Math.pow(vertices[1]-vertices[4],2)));
+        var datar = Math.sqrt((Math.pow(vertices[0]-vertices[9],2)+Math.pow(vertices[1]-vertices[10],2)));
 		var result1 = Math.sqrt((Math.pow(newPointPosition[0]-vertices[0],2)+Math.pow(newPointPosition[1]-vertices[1],2)));
 		//Jarak dengan titik default 2
 		var result2 = Math.sqrt((Math.pow(newPointPosition[0]-vertices[3],2)+Math.pow(newPointPosition[1]-vertices[4],2)));
@@ -52,11 +53,11 @@ window.onload = function init() {
 		vertices[0] = newPointPosition[0];
 		vertices[1] = newPointPosition[1];
 		vertices[3] = vertices[0];
-		vertices[4] = vertices[1]-2*jarak;
-		vertices[6] = vertices[3]+2*jarak;
+		vertices[4] = vertices[1]-tegak;
+		vertices[6] = vertices[3]+datar;
 		vertices[7] = vertices[4];
 		vertices[9] = vertices[6];
-		vertices[10] = vertices[7]+2*jarak;
+		vertices[10] = vertices[7]+tegak;
 		}
 
 		var vertex_buffer = gl.createBuffer( );
@@ -106,12 +107,12 @@ window.onload = function init() {
 	});
 }
 
-function renderSquare(n) {
+function renderRectangle() {
     var vertices = [
-    	-n, n, 0.0, // 1st - 0
-    	-n, -n, 0.0, // 2nd - 1
-    	n, -n, 0.0, // 3rd - 2
-    	n, n, 0.0 // 4th - 3
+        -0.3, 0.6, 0.0, // 1st - 0
+        -0.3, -0.3, 0.0, // 2nd - 1
+        0.3, -0.3, 0.0, // 3rd - 2
+        0.3, 0.6, 0.0 // 4th - 3
      ];
     var indices = [3, 2, 1, 3, 1, 0];
     var vertex_buffer = gl.createBuffer( );
@@ -158,7 +159,6 @@ function renderSquare(n) {
 	gl.viewport( 0, 0, canvas.width, canvas.height );
 	gl.drawElements( gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0 );
 }
-
 
 function getMousePosition(canvas, event) {
 	let x = (2 * event.clientX) / canvas.width - 1;
