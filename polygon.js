@@ -1,15 +1,12 @@
 "use strict";
 
-var canvas;
-var gl;
+
 
 var maxNumVertices = 200;
 var index = 0;
 
-var cindex = 0;
 
 var colors = [
-
     vec4(0.0, 0.0, 0.0, 1.0),  // black
     vec4(1.0, 0.0, 0.0, 1.0),  // red
     vec4(1.0, 1.0, 0.0, 1.0),  // yellow
@@ -18,9 +15,10 @@ var colors = [
     vec4(1.0, 0.0, 1.0, 1.0),  // magenta
     vec4(0.0, 1.0, 1.0, 1.0)   // cyan
 ];
+var cindex = 0; // default : black
+
 var t;
 
-var numLines = 0;
 
 var numPolygons = 0;
 var numIndices = [];
@@ -28,13 +26,12 @@ numIndices[0] = 0;
 var start = [0];
 
 window.onload = function init() {
-    canvas = document.getElementById("glcanvas");
+    var canvas = document.getElementById("glcanvas");
 
-    gl = WebGLUtils.setupWebGL(canvas);
+    var gl = WebGLUtils.setupWebGL(canvas);
     if (!gl) { alert("Unable to setup WebGL. Your browser or computer may not support it."); }
 
-    var colorMenu= document.getElementById("colorMenu");
-
+    var colorMenu = document.getElementById("colorMenu");
     colorMenu.addEventListener("click", function () {
         cindex = colorMenu.selectedIndex;
     });
@@ -47,6 +44,9 @@ window.onload = function init() {
         start[numPolygons] = index;
         renderPolygon();
     });
+
+    var clearCanvas = document.getElementById("clearCanvas")
+    clearCanvas.addEventListener("click", function () { location.reload() })
 
     canvas.addEventListener("mousedown", function (event) {
         t = vec2(2 * event.clientX / canvas.width - 1,
