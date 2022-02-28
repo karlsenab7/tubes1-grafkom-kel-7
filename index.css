@@ -26,7 +26,8 @@ div.help {
 	padding: 20px;
 }
 
-a {
+
+a.link {
 	outline: none;
 	text-decoration: none;
 	display: inline-block;
@@ -37,15 +38,19 @@ a {
 	color: black;
   }
   
-  a:link, a:visited, a:focus {
+  a.link:link, a.link:visited, a.link:focus {
 	background:  rgb(22, 193, 223);
   }
   
-  a:hover {
+  a.link:hover {
 	background: rgb(160, 160, 196) ;
   }
   
-  a:active {
+  a.link:active {
 	background: rgb(27, 189, 181);
 	color: white;
   }
+
+button {
+	margin: 5px;
+}

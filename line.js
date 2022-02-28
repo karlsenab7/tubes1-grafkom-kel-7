@@ -18,6 +18,9 @@ function DeviceToNormalised( coord, axisSize )
 function main( )
 {
 	let canvasElem = document.querySelector("canvas");
+	// clear canvas
+    var clearCanvas = document.getElementById("clearCanvas")
+    clearCanvas.addEventListener("click", function () { location.reload() })
 	canvasElem.addEventListener("mousedown", function(e)
 	{
 		var newPointPosition = getMousePosition(canvasElem, e);
