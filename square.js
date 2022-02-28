@@ -15,7 +15,9 @@ window.onload = function init() {
     renderSquare(0.4);
     });
 
-
+	var clearCanvas = document.getElementById("clearCanvas")
+    clearCanvas.addEventListener("click", function () { location.reload() })
+	
 	let canvasElem = document.querySelector("canvas");
 	canvasElem.addEventListener("mousedown", function(e)
 	{

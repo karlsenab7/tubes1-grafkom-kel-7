@@ -15,7 +15,8 @@ window.onload = function init() {
     renderRectangle();
     });
 
-
+    var clearCanvas = document.getElementById("clearCanvas")
+    clearCanvas.addEventListener("click", function () { location.reload() })
 	let canvasElem = document.querySelector("canvas");
 	canvasElem.addEventListener("mousedown", function(e)
 	{
