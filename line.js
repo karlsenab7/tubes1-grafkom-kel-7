@@ -1,100 +1,111 @@
-// "use strict";
+main( );
 
-// var canvas;
-// var gl;
+function NormalisedToDevice( coord, axisSize )
+{
+	var halfAxisSize = axisSize / 2;
+	var deviceCoord = ( coord + 1 ) * halfAxisSize;
+	return deviceCoord;
+}
 
-// var maxNumVertices = 200;
-// var index = 0;
-
-// var cindex = 0;
-
-// var colors = [
-
-//     vec4(0.0, 0.0, 0.0, 1.0),  // black
-//     vec4(1.0, 0.0, 0.0, 1.0),  // red
-//     vec4(1.0, 1.0, 0.0, 1.0),  // yellow
-//     vec4(0.0, 1.0, 0.0, 1.0),  // green
-//     vec4(0.0, 0.0, 1.0, 1.0),  // blue
-//     vec4(1.0, 0.0, 1.0, 1.0),  // magenta
-//     vec4(0.0, 1.0, 1.0, 1.0)   // cyan
-// ];
-// var t;
-
-// var numLines = 0;
-
-// var numPolygons = 0;
-// var numIndices = [];
-// numIndices[0] = 0;
-// var start = [0];
-
-// window.onload = function init() {
-//     canvas = document.getElementById("glcanvas");
-
-//     gl = WebGLUtils.setupWebGL(canvas);
-//     if (!gl) { alert("Unable to setup WebGL. Your browser or computer may not support it."); }
-
-//     var colorMenu= document.getElementById("colorMenu");
-
-//     colorMenu.addEventListener("click", function () {
-//         cindex = colorMenu.selectedIndex;
-//     });
-
-//     // Line
-//     var createLine = document.getElementById("createPolygon")
-//     createPolygon.addEventListener("click", function () {
-//         numPolygons++;
-//         numIndices[numPolygons] = 0;
-//         start[numPolygons] = index;
-//         renderPolygon();
-//     });
-
-//     canvas.addEventListener("mousedown", function (event) {
-//         t = vec2(2 * event.clientX / canvas.width - 1,
-//             2 * (canvas.height - event.clientY) / canvas.height - 1);
-//         gl.bindBuffer(gl.ARRAY_BUFFER, bufferId);
-//         gl.bufferSubData(gl.ARRAY_BUFFER, 8 * index, flatten(t));
-
-//         t = vec4(colors[cindex]);
-
-//         gl.bindBuffer(gl.ARRAY_BUFFER, cBufferId);
-//         gl.bufferSubData(gl.ARRAY_BUFFER, 16 * index, flatten(t));
-
-//         numIndices[numPolygons]++;
-//         index++;
-//     });
+function DeviceToNormalised( coord, axisSize )
+{
+	var halfAxisSize = axisSize / 2;
+	var normalisedCoord = ( coord / halfAxisSize ) - 1;
+	return normalisedCoord;
+}
 
 
-//     gl.viewport(0, 0, canvas.width, canvas.height);
-//     gl.clearColor(0.8, 0.8, 0.8, 1.0);
-//     gl.clear(gl.COLOR_BUFFER_BIT);
+function main( )
+{
+	let canvasElem = document.querySelector("canvas");
+	canvasElem.addEventListener("mousedown", function(e)
+	{
+		var newPointPosition = getMousePosition(canvasElem, e);
+		console.log(newPointPosition);
+		const canvas = document.querySelector( "#glcanvas" );
+		const gl = canvas.getContext( "webgl" );
+	
+		if ( !gl )
+		{
+			alert( "Unable to setup WebGL. Your browser or computer may not support it." );
+	
+			return;
+		}
+		//Line Default
+		var lineVertices = [
+			-0.5, 0.0, 0.0,
+			0.5, 0.0, 0.0,
+		];
 
+		//Jarak dengan titik default 1
+		var result1 = Math.sqrt((Math.pow(newPointPosition[0]-lineVertices[0],2)+Math.pow(newPointPosition[1]-lineVertices[1],2)));
+		//Jarak dengan titik default 2
+		var result2 = Math.sqrt((Math.pow(newPointPosition[0]-lineVertices[3],2)+Math.pow(newPointPosition[1]-lineVertices[4],2)));
+		console.log(result1);
+		console.log(result2);
+		if (result1 < result2){
+			lineVertices[0] = newPointPosition[0];
+			lineVertices[1] = newPointPosition[1];
+		} 
+		else if (result1 > result2){
+			lineVertices[3] = newPointPosition[0];
+			lineVertices[4] = newPointPosition[1];
+		}
 
-//     //
-//     //  Load shaders and initialize attribute buffers
-//     //
-//     var program = initShaders(gl, "vertex-shader", "fragment-shader");
-//     gl.useProgram(program);
+		if(document.getElementById("scale").value.length > 0){
+			for(let i = 0; i < lineVertices.length; i++){
+				lineVertices[i] = lineVertices[i] * document.getElementById("scale").value;
+			}
+		}
+		console.log(lineVertices);
+		var vertex_buffer = gl.createBuffer( );
+			gl.bindBuffer( gl.ARRAY_BUFFER, vertex_buffer );
+			gl.bufferData( gl.ARRAY_BUFFER, new Float32Array( lineVertices ), gl.STATIC_DRAW );
 
-//     var bufferId = gl.createBuffer();
-//     gl.bindBuffer(gl.ARRAY_BUFFER, bufferId);
-//     gl.bufferData(gl.ARRAY_BUFFER, 8 * maxNumVertices, gl.STATIC_DRAW);
-//     var vPos = gl.getAttribLocation(program, "vPosition");
-//     gl.vertexAttribPointer(vPos, 2, gl.FLOAT, false, 0, 0);
-//     gl.enableVertexAttribArray(vPos);
+	
+			gl.bindBuffer( gl.ARRAY_BUFFER, null );
+		var vertCode = 
+			'attribute vec3 coordinates;' +
+			'void main(void)' +
+			'{' +
+				' gl_Position = vec4(coordinates, 1.0);' +
+			'}';
+		var vertShader = gl.createShader( gl.VERTEX_SHADER );
+		gl.shaderSource( vertShader, vertCode );
+		gl.compileShader( vertShader );
+		var fragCode = 
+			'void main(void)' +
+			'{' +
+				' gl_FragColor = vec4(0.0, 0.0, 0.0, 0.1);' +
+			'}';
+		var fragShader = gl.createShader( gl.FRAGMENT_SHADER );
+		gl.shaderSource( fragShader, fragCode );
+		gl.compileShader( fragShader );
+		var shaderProgram = gl.createProgram( );
+		gl.attachShader( shaderProgram, vertShader );
+		gl.attachShader( shaderProgram, fragShader );
+		gl.linkProgram( shaderProgram );
+		gl.useProgram( shaderProgram );
+		gl.bindBuffer( gl.ARRAY_BUFFER, vertex_buffer );
+		var coord = gl.getAttribLocation( shaderProgram, "coordinates" );
+		gl.vertexAttribPointer( coord, 3, gl.FLOAT, false, 0, 0 );
+		gl.enableVertexAttribArray( coord );
+		gl.clearColor( 1.0, 1.0, 1.0, 0.0 );
+		gl.enable( gl.DEPTH_TEST );
+		gl.clear( gl.COLOR_BUFFER_BIT );
+		gl.viewport( 0, 0, canvas.width, canvas.height );
+		gl.drawArrays( gl.LINES, 0, 2 );
+	});
 
-//     var cBufferId = gl.createBuffer();
-//     gl.bindBuffer(gl.ARRAY_BUFFER, cBufferId);
-//     gl.bufferData(gl.ARRAY_BUFFER, 16 * maxNumVertices, gl.STATIC_DRAW);
-//     var vColor = gl.getAttribLocation(program, "vColor");
-//     gl.vertexAttribPointer(vColor, 4, gl.FLOAT, false, 0, 0);
-//     gl.enableVertexAttribArray(vColor);
-// }
-
-// function renderLine() {
-
-//     gl.clear(gl.COLOR_BUFFER_BIT);
-
-//     for (var i = 0; i < numPolygons; i++) {
-//         gl.drawArrays(gl.Line, start[i], numIndices[i]);
-//     }
-// }
+	function getMousePosition(canvas, event) {
+		let x = (2 * event.clientX) / canvas.width - 1;
+		let y = (2 * (canvas.height - event.clientY)) / canvas.height - 1;
+		var arr = new Array();
+		arr.push(x);
+		arr.push(y);
+		console.log("Coordinate x: " + x, 
+					"Coordinate y: " + y);
+		return arr;
+	}
+  
+}
