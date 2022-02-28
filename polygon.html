@@ -32,9 +32,8 @@
 
 <body>
 	<canvas style="display: block;" id="glcanvas" width="640" height="480"></canvas>
-	<div>
+	<div style="padding: 10px;">
 		<div>
-			<a href="index.html">Home</a>
 			<label>Choose color</label>
 			<select name="colorMenu" id="colorMenu" size="1">
 				<option value="0">Black</option>
@@ -42,14 +41,24 @@
 				<option value="2">Yellow</option>
 				<option value="3">Green</option>
 				<option value="4">Blue</option>
-				<option value="5">Magenta</option>
-				<option value="6">Cyan</option>
+				<option value="5">Purple</option>
+				<option value="6">Light Blue</option>
 			</select>
 			<button id="createPolygon">Create Polygon</button>
 			<button id="clearCanvas">Clear</button>
+			<button id="save">Save</button>
+			<button><a href="index.html" style="text-decoration:none;">Home</a></button>
 		</div>
-	</div>	
+		<div>
+			<label class="form-label" style="margin-top:50px;">Load file</label>
+			<div>
+				<input type="file" id="load" accept=".json,application/json" />
+			</div>
+
+		</div>
+	</div>
 </body>
 
 <script src="polygon.js"></script>
+
 </html>
