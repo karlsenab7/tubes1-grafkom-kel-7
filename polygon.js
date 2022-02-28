@@ -22,8 +22,8 @@ var colors = [
 ];
 var cindex = 0; // default : black
 
-var t2;
-var t4;
+var t2; // store position (vec2)
+var t4; // store color (vec4)
 var arrOfT2 = [];
 var arrOfT4 = [];
 var t2zero = [];
@@ -32,13 +32,12 @@ arrOfT2[0] = t2zero;
 arrOfT4[0] = t4zero;
 
 
-
 var numPolygons = 0;
 var numIndices = [];
 numIndices[0] = 0;
 var start = [0];
 
-
+// download to file
 const downloadToFile = (
     content,
     filename = "data_kel7.json",
@@ -52,6 +51,7 @@ const downloadToFile = (
     URL.revokeObjectURL(a.href);
 };
 
+// save to file
 const saveProgress = () => {
     const data = {
         index,
@@ -65,6 +65,7 @@ const saveProgress = () => {
     downloadToFile(JSON.stringify(data));
 };
 
+// load external file
 const loadProgress = (e) => {
     const file = e.target.files[0];
     var reader = new FileReader();
@@ -83,19 +84,23 @@ const loadProgress = (e) => {
     });
     reader.readAsBinaryString(file);
 };
+
 window.onload = function init() {
     canvas = document.getElementById("glcanvas");
     gl = WebGLUtils.setupWebGL(canvas);
     if (!gl) { alert("Unable to setup WebGL. Your browser or computer may not support it."); }
 
+    // Menu Color
     var colorMenu = document.getElementById("colorMenu");
     colorMenu.addEventListener("click", function () {
         cindex = colorMenu.selectedIndex;
     });
 
+    // Save
     let saveButton = document.getElementById("save");
     saveButton.addEventListener("click", saveProgress);
 
+    // Load
     let loadButton = document.getElementById("load");
     loadButton.addEventListener("change", loadProgress);
 
@@ -140,7 +145,7 @@ window.onload = function init() {
     gl.clear(gl.COLOR_BUFFER_BIT);
 
 
-    
+    // Program
     var program = initShaders(gl, "vertex-shader", "fragment-shader");
     gl.useProgram(program);
 
@@ -171,8 +176,8 @@ function renderPolygon() {
 function renderLoad() {
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-    console.log(arrOfT2)
-    console.log(arrOfT4)
+    console.log(arrOfT2);
+    console.log(arrOfT4);
     // bufferId = gl.createBuffer();
     // cBufferId = gl.createBuffer();
     for (let i = 0; i < arrOfT2.length; i++) {
@@ -182,11 +187,9 @@ function renderLoad() {
         gl.bindBuffer(gl.ARRAY_BUFFER, cBufferId);
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, flatten(arrOfT4[i]));
     }
-    console.log()
-
-
 
     for (var i = 0; i < numPolygons; i++) {
         gl.drawArrays(gl.TRIANGLE_FAN, start[i], numIndices[i]);
     }
+    console.log("renderLoad works to the end");
 }
