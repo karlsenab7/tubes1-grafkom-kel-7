@@ -11,7 +11,8 @@
 <body>
 	<canvas style="display: block;" id="glcanvas" width="640" height="480"></canvas>
 	<div style="padding: 10px;">
-		<div>
+		<a href="index.html" style="text-decoration:none;">Home</a>
+		<div style="padding-top: 10px;">
 			<label>Choose color</label>
 			<select name="colorMenu" id="colorMenu" size="1">
 				<option value="0">Black</option>
@@ -25,10 +26,10 @@
 			<button id="createPolygon">Create Polygon</button>
 			<button id="clearCanvas">Clear</button>
 			<button id="save">Save</button>
-			<button><a href="index.html" style="text-decoration:none;">Home</a></button>
+			
 		</div>
 		<div>
-			<label class="form-label" style="margin-top:50px;">Load file</label>
+			<label>Load file</label>
 			<div>
 				<input type="file" id="load" accept=".json,application/json" />
 			</div>

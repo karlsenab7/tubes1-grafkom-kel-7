@@ -1,22 +1,63 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<title>WebGL Home</title>
-		<link rel="stylesheet" href="index.css" type="text/css" />
 
-	</head>
+<head>
+	<meta charset="utf-8" />
+	<title>WebGL Home</title>
+	<link rel="stylesheet" href="index.css" type="text/css" />
 
-	<body>
-		<div>
-			<a href="line.html">Line</a>
-			<a href="square.html">Square</a>
-			<a href="polygon.html">Polygon</a>
+</head>
+
+<body>
+	<div>
+		<a href="line.html">Line</a>
+		<a href="square.html">Square</a>
+		<a href="rectangle.html">Rectangle</a>
+		<a href="polygon.html">Polygon</a>
+	</div>
+	<div>
+		<h1>How To Use This Website</h1>
+		<div class="help">
+			<label>LINE</label>
+			<p>1. Model garis. Pengguna hanya perlu mengeklik canvas dengan mengarah kursor pada canvas. Terdapat titik poros pada koordinat (0.5,0) dan (-0.5,0). Jika kursor diklik pada bagian kiri canvas, maka titik poros pada (0.5,0) dan jika diklik pada bagian kanan canvas, maka maka titik poros pada (-0.5,0). Setiap klik pada canvas akan menggeser titiknya.
+			</br>2. Pengguna juga dapat mengatur panjang dengan faktor pembesaran dengan memasukkan nilai pada input field <b>“Masukkan skala pembesaran”</b>.
+				
+			</p>
 		</div>
-		<div>
-			<h1>How To Use This Website</h1>
 
+		<div class="help">
+			<label>SQUARE</label>
 		</div>
-	</body>
+
+		<div class="help">
+			<label>RECTANGLE</label>
+		</div>
+
+		<div class="help">
+			<label>POLYGON</label>
+			<p>
+				Menggambar <br>
+				1. Klik pada bagian canvas minimal tiga kali (boleh lebih) <br>
+				2. Pada saat sebelum meng-klik canvas, anda dapat memilih warna terlebih dahulu <br>
+				3. Klik tombol <b>"Create Polygon"</b> untuk membuat polygon <br>
+				4. Anda dapat menyimpan gambar pada canvas dengan menekan tombol <b>"Save"</b> <br>
+				5. Kemudian akan dihasilkan sebuah file json <br>
+			</p>
+			<p>
+				Memasukkan File Eksternal <br>
+				1. Tekan tombol <b>"Choose File"</b> <br>
+				2. Pilih file json yang sudah pernah di-save <br>
+				3. Gambar akan muncul sesuai dengan yang sudah pernah digambar <br>
+
+			</p>
+			<p>
+				Membersihkan layar <br>
+				1. Anda dapat menekan tombol <b>"Clear"</b> untuk membersihkan canvas <br>
+			</p>
+		</div>
+
+
+	</div>
+</body>
 
 </html>

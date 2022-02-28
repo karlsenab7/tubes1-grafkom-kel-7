@@ -115,20 +115,14 @@ window.onload = function init() {
     canvas.addEventListener("mousedown", function (event) {
         t2 = vec2(2 * event.clientX / canvas.width - 1,
             2 * (canvas.height - event.clientY) / canvas.height - 1);
-        // console.log(t2);
         gl.bindBuffer(gl.ARRAY_BUFFER, bufferId);
         gl.bufferSubData(gl.ARRAY_BUFFER, 8 * index, flatten(t2));
 
         t4 = vec4(colors[cindex]);
-        // console.log(t4);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, cBufferId);
         gl.bufferSubData(gl.ARRAY_BUFFER, 16 * index, flatten(t4));
 
-        // arrOfT2.push(t2[0]);
-        // arrOfT2.push(t2[1]);
-
-        // arrOfT4.push(t4);
         t2zero.push(t2[0]);
         t2zero.push(t2[1]);
 
@@ -146,9 +140,7 @@ window.onload = function init() {
     gl.clear(gl.COLOR_BUFFER_BIT);
 
 
-    //
-    //  Load shaders and initialize attribute buffers
-    //
+    
     var program = initShaders(gl, "vertex-shader", "fragment-shader");
     gl.useProgram(program);
 
