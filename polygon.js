@@ -4,8 +4,11 @@ var canvas;
 var gl;
 var maxNumVertices = 200;
 var index = 0;
-var bufferId;
-var cBufferId;
+
+canvas = document.getElementById("glcanvas");
+gl = WebGLUtils.setupWebGL(canvas);
+var bufferId = gl.createBuffer();
+var cBufferId = gl.createBuffer();
 
 var colors = [
     // vec4()
@@ -23,6 +26,11 @@ var t2;
 var t4;
 var arrOfT2 = [];
 var arrOfT4 = [];
+var t2zero = [];
+var t4zero = [];
+arrOfT2[0] = t2zero;
+arrOfT4[0] = t4zero;
+
 
 
 var numPolygons = 0;
@@ -107,20 +115,29 @@ window.onload = function init() {
     canvas.addEventListener("mousedown", function (event) {
         t2 = vec2(2 * event.clientX / canvas.width - 1,
             2 * (canvas.height - event.clientY) / canvas.height - 1);
-        console.log(t2);
+        // console.log(t2);
         gl.bindBuffer(gl.ARRAY_BUFFER, bufferId);
         gl.bufferSubData(gl.ARRAY_BUFFER, 8 * index, flatten(t2));
 
         t4 = vec4(colors[cindex]);
-        console.log(t4);
+        // console.log(t4);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, cBufferId);
         gl.bufferSubData(gl.ARRAY_BUFFER, 16 * index, flatten(t4));
 
-        arrOfT2.push(t2);
-        arrOfT4.push(t4);
+        // arrOfT2.push(t2[0]);
+        // arrOfT2.push(t2[1]);
+
+        // arrOfT4.push(t4);
+        t2zero.push(t2[0]);
+        t2zero.push(t2[1]);
+
+        t4zero.push(t4);
+
         numIndices[numPolygons]++;
         index++;
+        console.log(arrOfT2);
+        console.log(arrOfT4);
     });
 
 
@@ -135,14 +152,14 @@ window.onload = function init() {
     var program = initShaders(gl, "vertex-shader", "fragment-shader");
     gl.useProgram(program);
 
-    var bufferId = gl.createBuffer();
+    // var bufferId = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, bufferId);
     gl.bufferData(gl.ARRAY_BUFFER, 8 * maxNumVertices, gl.STATIC_DRAW);
     var vPos = gl.getAttribLocation(program, "vPosition");
     gl.vertexAttribPointer(vPos, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(vPos);
 
-    var cBufferId = gl.createBuffer();
+    // var cBufferId = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, cBufferId);
     gl.bufferData(gl.ARRAY_BUFFER, 16 * maxNumVertices, gl.STATIC_DRAW);
     var vColor = gl.getAttribLocation(program, "vColor");
@@ -164,15 +181,16 @@ function renderLoad() {
 
     console.log(arrOfT2)
     console.log(arrOfT4)
-    var bufferId = gl.createBuffer();
-    var cBufferId = gl.createBuffer();
+    // bufferId = gl.createBuffer();
+    // cBufferId = gl.createBuffer();
     for (let i = 0; i < arrOfT2.length; i++) {
         gl.bindBuffer(gl.ARRAY_BUFFER, bufferId);
-        gl.bufferSubData(gl.ARRAY_BUFFER, 8 * index, flatten(arrOfT2[i]));
+        gl.bufferSubData(gl.ARRAY_BUFFER, 0, flatten(arrOfT2[i]));
 
         gl.bindBuffer(gl.ARRAY_BUFFER, cBufferId);
-        gl.bufferSubData(gl.ARRAY_BUFFER, 16 * index, flatten(arrOfT4[i]));
+        gl.bufferSubData(gl.ARRAY_BUFFER, 0, flatten(arrOfT4[i]));
     }
+    console.log()
 
 
 
